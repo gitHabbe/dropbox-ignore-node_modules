@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 const { exec } = require("child_process");
 const fs = require('fs');
+const path = require("path");
 
 (async () => {
   try {
     const cwd = process.cwd();
-    const modulesPath = cwd + '/node_modules';
+    const modulesPath = path.join(cwd, 'node_modules');
 
     // check if node_modules exists
     const nodeModulesExist = fs.existsSync(modulesPath);
