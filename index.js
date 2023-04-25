@@ -16,16 +16,19 @@ const path = require("path");
 
     // shell command
     const platform = process.platform;
-    const command = (
-      platform === "win32"
-        ? `Set-Content -Path '${modulesPath}' -Stream com.dropbox.ignored -Value 1`
-        : platform === "darwin"
+    const shellOptions = {};
+    let command;
+    if (platform === "win32") {
+      shellOptions.shell = "powershell.exe"
+      command = `Set-Content -Path '${modulesPath}' -Stream com.dropbox.ignored -Value 1`;
+    } else {
+      command = platform === "darwin"
           ? `xattr -w com.dropbox.ignored 1 ${modulesPath.replace(" ", "\\ ")}`
-          : `attr -s com.dropbox.ignored -V 1 ${modulesPath}`
-    );
+          : `attr -s com.dropbox.ignored -V 1 ${modulesPath}`;
+    }
 
     // execute shell command
-    exec(command, (error, stdout, stderr) => {
+    exec(command, shellOptions, (error, stdout, stderr) => {
       if (error) {
         throw error;
       }
